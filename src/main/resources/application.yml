@@ -74,7 +74,7 @@ spring:
         stat: #状态监控过滤器
           enabled: true #是否启用
           log-slow-sql: true #开启慢sql监控，超过指定时间slow-sql-millis时，则认为是慢sql，记录到日志中
-          slow-sql-millis: 20
+          slow-sql-millis: 5000
           #merge-sql: true
         wall: #防火墙过滤器
           config:
@@ -113,12 +113,17 @@ spring:
           password: root
           driver-class-name: com.mysql.cj.jdbc.Driver
         h2_frame:
-          #AUTO_SERVER=TRUE 表示使用混合模式，此时可以支持多个连接。默认情况下，H2 只运行一个进程访问.
-          #"~" 表示系统当前登录用户的根目录。test数据库不存在时会自动创建;
-          url: jdbc:h2:~/test_frame;AUTO_SERVER=TRUE
-          username: admin #数据库不存在时，h2 会自动新建，此时账号密码自定义即可
-          password: 123456
           driver-class-name: org.h2.Driver
+          #AUTO_SERVER=TRUE 表示使用混合模式，此时可以支持多个连接。默认情况下，H2 只运行一个进程访问.
+          #url: jdbc:h2:~/test_frame;AUTO_SERVER=TRUE #"~" 表示系统当前登录用户的根目录。test数据库不存在时会自动创建;
+          #username: admin #数据库不存在时，h2 会自动新建，此时账号密码自定义即可
+          #password: 123456
+          #对数据库连接信息进行加密(使用工具方法自动生成即可，com.wmx.jdk17app.baomidou.JmdController.main)
+          url: ENC(HVG/DMuFMZEpBwQrlD3KFcHiKAnpy8z0JlCTCM8emHaLDu8GNmuwGyCGlDuIgAssoAPZ65NL1LKUb41YjgaVzw==)
+          username: ENC(BwNd6e0rH1SmoVQ8W9SM9+vieggVftInqgQfAYfVozkmVZTZ+iZd8B7CHfnZxIUkv888MIjplB4c918A3xoAXA==)
+          password: ENC(CEk6yfbLWDKfIrrBUDAsCkwVu2QDgb4agaHPokCQJ12ybmRYw4IMmN8xo43EkDKPQPdKOcaZL+WxYGNQuL0pbQ==)
+          #用于解密的公钥(使用工具方法自动生成即可，com.wmx.jdk17app.baomidou.JmdController.main)
+          public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIVBVIxln3eJapSG4nuWGEh1744BwWSeJ4OKXxj4wOPwKXgAB2796H0l+e6/iT1IQaOPCCLOOnkC8o7z92iqcpcCAwEAAQ==
         sqlite_pm:
           # 指定sqlite数据库文件地址,一个文件相当于一个数据库,目录必须存在,文件不存在时会自动新建;SQLite可以不需要配置账号与密码;
           # ${user.home} 表示用户的根目录，如 C:\Users\用户名

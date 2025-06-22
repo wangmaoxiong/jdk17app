@@ -66,4 +66,29 @@ public class JmdController {
         List<Map<String, Object>> mapList = jmdService.elementDataSource();
         return ResultData.success(mapList);
     }
+
+    /**
+     * http://localhost:8080/jmd/h2FrameInit
+     *
+     * @return
+     */
+    @GetMapping("jmd/h2FrameInit")
+    public ResultData<List<Map<String, Object>>> h2FrameInit() {
+        jmdService.h2FrameInit();
+        List<Map<String, Object>> mapList = jmdService.h2FrameLoadAllUser();
+        return ResultData.success(mapList);
+    }
+
+    /**
+     * http://localhost:8080/jmd/sqlitePmInit
+     *
+     * @return
+     */
+    @GetMapping("jmd/sqlitePmInit")
+    public ResultData<List<Map<String, Object>>> sqlitePmInit() {
+        jmdService.sqlitePmInit();
+        List<Map<String, Object>> mapList = jmdService.sqlitePmLoadAllUser();
+        return ResultData.success(mapList);
+    }
+
 }

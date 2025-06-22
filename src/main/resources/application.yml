@@ -8,6 +8,10 @@ spring:
     #日期格式化
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  h2: #H2 Web 控制台配置，启用 h2 Console 控制台，并设置访问路径
+    console:
+      enabled: true
+      path: /h2_console
   datasource: #多数据源配置
     dynamic:
       enabled: true #启用动态数据源，默认为true
@@ -30,3 +34,15 @@ spring:
           username: root
           password: root
           driver-class-name: com.mysql.cj.jdbc.Driver
+        h2_frame:
+          #AUTO_SERVER=TRUE 表示使用混合模式，此时可以支持多个连接。默认情况下，H2 只运行一个进程访问.
+          #"~" 表示系统当前登录用户的根目录。test数据库不存在时会自动创建;
+          url: jdbc:h2:~/test_frame;AUTO_SERVER=TRUE
+          username: admin #数据库不存在时，h2 会自动新建，此时账号密码自定义即可
+          password: 123456
+          driver-class-name: org.h2.Driver
+        sqlite_pm:
+          # 指定sqlite数据库文件地址,一个文件相当于一个数据库,目录必须存在,文件不存在时会自动新建;SQLite可以不需要配置账号与密码;
+          # ${user.home} 表示用户的根目录，如 C:\Users\用户名
+          url: jdbc:sqlite:${user.home}\test_pm.db
+          driver-class-name: org.sqlite.JDBC

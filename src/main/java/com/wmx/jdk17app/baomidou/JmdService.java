@@ -35,8 +35,7 @@ public class JmdService {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * 使用默认的数据源进行操作
-     * 此时可以省略@DS注解。
+     * 使用默认的数据源进行操作时，可以省略@DS注解。
      */
     // @DS("master")
     public List<Map<String, Object>> defaultDataSource() {
@@ -47,6 +46,7 @@ public class JmdService {
 
     /**
      * 测试事物是否正常回滚
+     * 使用默认的数据源进行操作时，可以省略@DS注解。
      */
     @Transactional(rollbackFor = Exception.class)
     public void testTransactional() {
@@ -56,7 +56,7 @@ public class JmdService {
         Object[] args2 = {2, "李四", "VUe开发", 7839, DateUtil.parseDate("1995/04/05"), 21000.5F, 1200, 10};
         jdbcTemplate.update(insertSql1, args1);
         jdbcTemplate.update(insertSql2, args2);
-        System.out.println(1/0);
+        System.out.println(1 / 0);
     }
 
     /**
@@ -80,6 +80,59 @@ public class JmdService {
     public List<Map<String, Object>> elementDataSource() {
         showDs(jdbcTemplate);
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList("select * from user limit 100");
+        return mapList;
+    }
+
+    @DS("h2_frame")
+    @Transactional(rollbackFor = Exception.class)
+    public void h2FrameInit() {
+        String dropTableSql = "drop table if exists emp";
+        jdbcTemplate.execute(dropTableSql);
+
+        String createTableSql = "CREATE TABLE IF NOT EXISTS emp (id int NOT NULL AUTO_INCREMENT,name varchar(50) DEFAULT NULL, pwd varchar(50) DEFAULT NULL, PRIMARY KEY (id))";
+        jdbcTemplate.execute(createTableSql);
+
+        String insertSql1 = "INSERT INTO emp VALUES (1,'zhangSan' ,'123456')";
+        String insertSql2 = "INSERT INTO emp VALUES (2,'lisi' ,'123456')";
+        String insertSql3 = "INSERT INTO emp VALUES (3,'王五' ,'123456')";
+        jdbcTemplate.execute(insertSql1);
+        jdbcTemplate.execute(insertSql2);
+        jdbcTemplate.execute(insertSql3);
+    }
+
+    @DS("h2_frame")
+    public List<Map<String, Object>> h2FrameLoadAllUser() {
+        showDs(jdbcTemplate);
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList("select * from emp limit 100");
+        return mapList;
+    }
+
+    @DS("sqlite_pm")
+    @Transactional(rollbackFor = Exception.class)
+    public void sqlitePmInit() {
+        String dropTableSql = "drop table if exists iphone";
+        jdbcTemplate.execute(dropTableSql);
+
+        String createTableSql = "CREATE TABLE iphone (\n" +
+                "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "  name TEXT NOT NULL,\n" +
+                "  price float(18,4) NOT NULL,\n" +
+                "  publish_time INTEGER DEFAULT NULL\n" +
+                ")";
+        jdbcTemplate.execute(createTableSql);
+
+        String insertSql1 = "INSERT INTO iphone (name ,price, publish_time) VALUES ('华为P30', '2488', '1737198128677')";
+        String insertSql2 = "INSERT INTO iphone (name ,price, publish_time) VALUES ('小米11', '4388', '1737198128677')";
+        String insertSql3 = "INSERT INTO iphone (name ,price, publish_time) VALUES ('小米23', '4388', '1737198128677')";
+        jdbcTemplate.execute(insertSql1);
+        jdbcTemplate.execute(insertSql2);
+        jdbcTemplate.execute(insertSql3);
+    }
+
+    @DS("sqlite_pm")
+    public List<Map<String, Object>> sqlitePmLoadAllUser() {
+        showDs(jdbcTemplate);
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList("select * from iphone limit 100");
         return mapList;
     }
 
@@ -110,6 +163,24 @@ public class JmdService {
      * 数据库名称>>MySQL
      * 数据库版本>>8.0.21
      * 连接用户名称>root@localhost
+     * <p>
+     * 数据源>>>>>>class com.baomidou.dynamic.datasource.DynamicRoutingDataSource
+     * 连接>>>>>>>>HikariProxyConnection@1193875315 wrapping conn24: url=jdbc:h2:~/test_frame user=ADMIN
+     * 连接地址>>>>jdbc:h2:~/test_frame
+     * 驱动名称>>>>H2 JDBC Driver
+     * 驱动版本>>>>2.3.232 (2024-08-11)
+     * 数据库名称>>H2
+     * 数据库版本>>2.3.232 (2024-08-11)
+     * 连接用户名称>ADMIN
+     * <p>
+     * 数据源>>>>>>class com.baomidou.dynamic.datasource.DynamicRoutingDataSource
+     * 连接>>>>>>>>HikariProxyConnection@1002493176 wrapping org.sqlite.jdbc4.JDBC4Connection@e2894d2
+     * 连接地址>>>>jdbc:sqlite:E:\sql\sqlite3\test_pm.db
+     * 驱动名称>>>>SQLite JDBC
+     * 驱动版本>>>>3.50.1.0
+     * 数据库名称>>SQLite
+     * 数据库版本>>3.50.1
+     * 连接用户名称>null
      *
      * @param jdbcTemplate
      */

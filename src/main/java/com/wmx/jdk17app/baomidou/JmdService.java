@@ -115,17 +115,12 @@ public class JmdService {
         String dropTableSql = "drop table if exists iphone";
         jdbcTemplate.execute(dropTableSql);
 
-        String createTableSql = "CREATE TABLE iphone (\n" +
-                "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "  name TEXT NOT NULL,\n" +
-                "  price float(18,4) NOT NULL,\n" +
-                "  publish_time INTEGER DEFAULT NULL\n" +
-                ")";
+        String createTableSql = "CREATE TABLE iphone (id INTEGER ,name TEXT NOT NULL,price float(18,4) NOT NULL,publish_time INTEGER DEFAULT NULL)";
         jdbcTemplate.execute(createTableSql);
 
-        String insertSql1 = "INSERT INTO iphone (name ,price, publish_time) VALUES ('华为P30', '2488', '1737198128677')";
-        String insertSql2 = "INSERT INTO iphone (name ,price, publish_time) VALUES ('小米11', '4388', '1737198128677')";
-        String insertSql3 = "INSERT INTO iphone (name ,price, publish_time) VALUES ('小米23', '4388', '1737198128677')";
+        String insertSql1 = "INSERT INTO iphone (id, name ,price, publish_time) VALUES (1, '华为P30', '2488', '1737198128677')";
+        String insertSql2 = "INSERT INTO iphone (id, name ,price, publish_time) VALUES (2, '小米11', '4388', '1737198128677')";
+        String insertSql3 = "INSERT INTO iphone (id, name ,price, publish_time) VALUES (3, '小米23', '4388', '1737198128677')";
         jdbcTemplate.execute(insertSql1);
         jdbcTemplate.execute(insertSql2);
         jdbcTemplate.execute(insertSql3);

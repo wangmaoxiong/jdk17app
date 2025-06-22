@@ -67,7 +67,23 @@
             <version>5.8.37</version>
         </dependency>
 
+        <!--使用原生JdbcTemplate模板时必须导入JDBC依赖。内部包含了默认的 com.zaxxer.hikari 数据源-->
+        <!--切换 druid 数据源时，HikariCP 依赖可以移除掉，不移除时也不影响-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <!-- Druid 数据源依赖，集成了 Spring boot，方便配置 druid 属性 -->
+        <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.2.25</version>
+        </dependency>
+
         <!--基于springboot的快速集成多数据源的启动器-->
+        <!--各个库可以使用不同的数据库连接池，如master使用Druid，slave使用HikariCP-->
         <!-- https://mvnrepository.com/artifact/com.baomidou/dynamic-datasource-spring-boot3-starter -->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -90,20 +106,13 @@
             <scope>compile</scope>
         </dependency>
 
-        <!--Sqlit3数据库数据库驱动-->
+        <!--Sqlit3数据库驱动-->
         <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.50.1.0</version>
         </dependency>
-
-        <!--使用原生JdbcTemplate模板时必须导入JDBC依赖。内部包含了默认的 com.zaxxer.hikari 数据源-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
 
     </dependencies>
 

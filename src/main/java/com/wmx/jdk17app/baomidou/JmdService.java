@@ -36,6 +36,8 @@ public class JmdService {
 
     /**
      * 使用默认的数据源进行操作时，可以省略@DS注解。
+     * 1、@DS("dsName")：dsName可以为组名也可以为具体某个库的名称。
+     * 2、@DS注解用于指定数据源名称，可以在类上，也可以在方法，优先级使用就近原则。省略注解时使用默认的数据源.
      */
     // @DS("master")
     public List<Map<String, Object>> defaultDataSource() {
@@ -176,6 +178,15 @@ public class JmdService {
      * 数据源>>>>>>class com.baomidou.dynamic.datasource.DynamicRoutingDataSource
      * 连接>>>>>>>>HikariProxyConnection@1002493176 wrapping org.sqlite.jdbc4.JDBC4Connection@e2894d2
      * 连接地址>>>>jdbc:sqlite:E:\sql\sqlite3\test_pm.db
+     * 驱动名称>>>>SQLite JDBC
+     * 驱动版本>>>>3.50.1.0
+     * 数据库名称>>SQLite
+     * 数据库版本>>3.50.1
+     * 连接用户名称>null
+     * <p>
+     * 数据源>>>>>>class com.baomidou.dynamic.datasource.DynamicRoutingDataSource
+     * 连接>>>>>>>>ConnectionProxyImpl{connectedTime=2025-06-22 10:31:00.026, closeCount=0, lastValidateTimeMillis=1970-01-01 08:00:00.0}
+     * 连接地址>>>>jdbc:sqlite:C:\Users\A\test_pm.db
      * 驱动名称>>>>SQLite JDBC
      * 驱动版本>>>>3.50.1.0
      * 数据库名称>>SQLite

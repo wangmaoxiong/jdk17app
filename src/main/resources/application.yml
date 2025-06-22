@@ -13,11 +13,88 @@ spring:
       enabled: true
       path: /h2_console
   datasource: #多数据源配置
+    # 1）如果druid参数都未配置，则保持原组件默认值。2）如果配置了全局druid参数，则每一个数据源都会继承它们。3）每一个数据源可以单独设置参数覆盖全局参数。
+    druid:
+      initialSize: 10 #初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时,默认0
+      minIdle: 10 # 最小连接池数量
+      maxActive: 200 # 最大连接池数量
+      maxWait: 60000 # 获取连接时最大等待时间,单位毫秒。配置了maxWait之后,缺省启用公平锁,并发效率会有所下降,如果需要可以通过配置useUnfairLock属性为true使用非公平锁。
+      connectTimeout: 30000 # 配置连接超时时间
+      socketTimeout: 60000 # 配置网络超时时间
+      timeBetweenEvictionRunsMillis: 60000 # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      minEvictableIdleTimeMillis: 300000 # 配置一个连接在池中最小生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000 # 配置一个连接在池中最大生存的时间，单位是毫秒
+      validationQuery: SELECT 1 FROM DUAL # 配置检测连接是否有效
+      testWhileIdle: true #申请连接的时候检测,如果空闲时间大于timeBetweenEvictionRunsMillis,执行validationQuery检测连接是否有效,默认为true
+      testOnBorrow: false #申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能,默认false.
+      testOnReturn: false #归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能,默认false.
+      filters: stat,wall,log4j2
+      webStatFilter: #web 状态监控过滤器
+        enabled: true #是否启用
+        url-pattern: /*                 #过滤所有url
+        exclusions: "*.js,*.css,*.gif,*.jpg,*.png,*.ico,/druid/*"   # 排除一些不必要的url
+        session-stat-enable: true       #开启session统计功能
+        session-stat-max-count: 1000    #session的最大个数,默认100
+      statViewServlet: #监控页面路径配置，用于展示Druid的监控统计信息
+        enabled: true #是否启用
+        allow: 127.0.0.1 # 设置白名单，不填则允许所有访问
+        #deny:  # 拒绝访问的地址，deny优先于allow，如果在deny列表中，就算在allow列表中，也会被拒绝
+        url-pattern: /druid/* #访问内置监控页面的路径，内置监控页面的首页是 http://127.0.0.1:8080/druid/login.html 或者 /druid/index.html
+#        reset-enable: false  #不允许清空统计数据,重新计算
+        login-username: admin #配置监控页面登陆用户
+        login-password: 123456 #配置监控页面登陆密码
+      filter:
+        stat: #状态监控过滤器
+          enabled: true #是否启用
+          log-slow-sql: true #开启慢sql监控，超过指定时间slow-sql-millis时，则认为是慢sql，记录到日志中
+          slow-sql-millis: 5000
+          merge-sql: true
+        wall: #防火墙过滤器
+          config:
+            enabled: true #是否启用
+            multi-statement-allow: true
+            delete-allow: false     #不允许删除数据
+            drop-table-allow: false #不允许删除表
+        slf4j: #日志监控过滤器，使用slf4j 进行日志输出
+          enabled: true
+          statement-log-error-enabled: true
+          statement-create-after-log-enabled: false
+          statement-close-after-log-enabled: false
+          result-set-open-after-log-enabled: false
+          result-set-close-after-log-enabled: false
     dynamic:
       enabled: true #启用动态数据源，默认为true
       primary: master #设置默认的数据源或者数据源组,默认为master
       strict: false #严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
       grace-destroy: false #是否优雅关闭数据源，默认为false，设置为true时，关闭数据源时如果数据源中还存在活跃连接，至多等待10s后强制关闭
+      druid:
+        initial-size: 5 # 初始连接数
+        # 最小连接池数量
+        min-idle: 10
+        # 最大连接池数量
+        max-active: 20
+        # 配置获取连接等待超时的时间
+        max-wait: 60000
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        time-between-eviction-runs-millis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        min-evictable-idle-time-millis: 300000
+        # 配置一个连接在池中最大生存的时间，单位是毫秒
+        max-evictable-idle-time-millis: 900000
+        # 配置检测连接是否有效
+        #validation-query: SELECT 1 FROM DUAL
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        # 打开PSCache，并指定每个连接上PSCache的大小。
+        # oracle设为true，mysql设为false。分库分表较多推荐设置为false
+        pool-prepared-statements: false
+        max-pool-prepared-statement-per-connection-size: 20
+        filters: stat # 注意这个值和druid原生不一致，默认启动了stat
+        stat:
+          merge-sql: true
+          log-slow-sql: true
+          slow-sql-millis: 2000
       datasource:
         master:
           url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
@@ -25,6 +102,10 @@ spring:
           password: root
           driver-class-name: com.mysql.cj.jdbc.Driver
           #type: com.zaxxer.hikari.HikariDataSource     #使用Hikaricp，可以省略，默认自动按以下顺序查找并使用连接池：Druid > HikariCp > BeeCp > DBCP2 > Spring Basic
+          druid: # 以下参数针对每个库可以重新设置druid参数
+            initial-size: 5
+            #validation-query: select 1 FROM DUAL # 比如oracle就需要重新设置这个
+            #public-key: #（非全局参数）设置即表示启用加密,底层会自动帮你配置相关的连接参数和filter。
         element:
           url: jdbc:mysql://127.0.0.1:3306/mysql?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
           username: root

@@ -75,10 +75,12 @@
         </dependency>
 
         <!-- Druid 数据源依赖，集成了 Spring boot，方便配置 druid 属性 -->
-        <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
+        <!-- 注意版本：SpringBoot3.x 必须使用druid-spring-boot-3-starter-->
+        <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-3-starter -->
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
+            <!--<artifactId>druid-spring-boot-starter</artifactId>-->
+            <artifactId>druid-spring-boot-3-starter</artifactId>
             <version>1.2.25</version>
         </dependency>
 
